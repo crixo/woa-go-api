@@ -1,0 +1,27 @@
+basePath: /v2
+host: cri.swagger.io
+info:
+  contact:
+    email: cris@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a crixo cample
+  license: {}
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /users/profile:
+    get:
+      consumes:
+      - application/json
+      description: User Profile
+      operationId: user-profile
+      produces:
+      - application/json
+      security:
+      - ApiKeyAuth: []
+      summary: User Profile2
+      tags:
+      - users
+swagger: "2.0"

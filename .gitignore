@@ -1,0 +1,7 @@
+vendor/
+*.db
+_*
+*.test
+.DS_Store
+engine
+bin/
