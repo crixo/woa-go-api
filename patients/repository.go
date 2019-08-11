@@ -1,8 +1,6 @@
 package patients
 
 import (
-	"net/http"
-
 	"github.com/crixo/woa-go-api/model"
 
 	"github.com/ulule/paging"
@@ -15,5 +13,5 @@ type Repository interface {
 	// Update(ctx context.Context, ar *model.PazientProfile) error
 	// Create(ctx context.Context, a *model.PazientProfile) error
 	// Delete(ctx context.Context, id int64) error
-	Find(Request *http.Request) (res []*model.Pazient, paginator *paging.OffsetPaginator, err error)
+	Find(requestPaginator *model.RequestPaginator) (res []*model.Pazient, paginator *paging.OffsetPaginator, err error)
 }

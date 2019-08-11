@@ -1,5 +1,55 @@
-basePath: /v2
-host: cri.swagger.io
+definitions:
+  model.HistoryKind:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    type: object
+  model.Pazient:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      mobile:
+        type: string
+      phone:
+        type: string
+      profession:
+        type: string
+      province:
+        type: string
+      remoteHistories:
+        items:
+          $ref: '#/definitions/model.RemoteHistory'
+        type: array
+      zipCode:
+        type: string
+    type: object
+  model.RemoteHistory:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      historyKind:
+        $ref: '#/definitions/model.HistoryKind'
+        type: object
+      historyKindID:
+        type: integer
+      pazientID:
+        type: integer
+    type: object
+host: localhost:8081
 info:
   contact:
     email: cris@swagger.io
@@ -11,17 +61,24 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /users/profile:
+  /patients:
     get:
       consumes:
       - application/json
-      description: User Profile
-      operationId: user-profile
+      description: Patient Profile description
+      operationId: patients-profile
       produces:
       - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Pazient'
+            type: array
       security:
       - ApiKeyAuth: []
-      summary: User Profile2
+      summary: Patient Profile
       tags:
-      - users
+      - patients
 swagger: "2.0"

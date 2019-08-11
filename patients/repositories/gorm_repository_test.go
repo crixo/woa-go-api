@@ -1,7 +1,6 @@
 package repositories_test
 
 import (
-	"net/http"
 	"testing"
 
 	"github.com/crixo/woa-go-api/model"
@@ -28,8 +27,7 @@ func TestFind(t *testing.T) {
 
 	r := repositories.NewGormPatientRepository(db)
 
-	request, _ := http.NewRequest("GET", "http://example.com?limit=20&offset=0", nil)
-	res, paginator, _ := r.Find(request)
+	res, paginator, _ := r.Find(&model.RequestPaginator{Limit: 20, Offset: 0})
 
 	n := int64(1)
 	assert.Len(t, res, 1)

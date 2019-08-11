@@ -8,7 +8,6 @@ import (
 	//"github.com/crixo/woa-go-api/model"
 	//
 	"github.com/crixo/woa-go-api/sqlite"
-	"github.com/crixo/woa-go-api/test/subtest"
 )
 
 // @title Swagger Example API
@@ -20,13 +19,12 @@ import (
 // @contact.url http://www.swagger.io/support
 // @contact.email cris@swagger.io
 
-// @host cri.swagger.io
-// @BasePath /v2
+// @host localhost:8081
+// @BasePath
 func main() {
 	fmt.Println("Go ORM Tutorial")
 
-	sqlite.InitialMigration()
+	db := sqlite.InitialMigration()
 	// Handle Subsequent requests
-	api.HandleRequests()
-	subtest.MyTest()
+	api.HandleRequests(db)
 }

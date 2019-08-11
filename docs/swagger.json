@@ -12,17 +12,16 @@
         "license": {},
         "version": "1.0"
     },
-    "host": "cri.swagger.io",
-    "basePath": "/v2",
+    "host": "localhost:8081",
     "paths": {
-        "/users/profile": {
+        "/patients": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "User Profile",
+                "description": "Patient Profile description",
                 "consumes": [
                     "application/json"
                 ],
@@ -30,10 +29,99 @@
                     "application/json"
                 ],
                 "tags": [
-                    "users"
+                    "patients"
                 ],
-                "summary": "User Profile2",
-                "operationId": "user-profile"
+                "summary": "Patient Profile",
+                "operationId": "patients-profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Pazient"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.HistoryKind": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Pazient": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "dateOfBirth": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "profession": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                },
+                "remoteHistories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.RemoteHistory"
+                    }
+                },
+                "zipCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.RemoteHistory": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "historyKind": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.HistoryKind"
+                },
+                "historyKindID": {
+                    "type": "integer"
+                },
+                "pazientID": {
+                    "type": "integer"
+                }
             }
         }
     }

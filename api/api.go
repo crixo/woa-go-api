@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -9,16 +8,24 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/gorilla/mux"
+
+	"github.com/crixo/woa-go-api/patients/deliveries"
+	"github.com/crixo/woa-go-api/patients/repositories"
+	"github.com/jinzhu/gorm"
+	"github.com/rs/cors"
 )
 
 // HandleRequests registers all routes
-func HandleRequests() {
+func HandleRequests(db *gorm.DB) {
 	myRouter := mux.NewRouter()
 
 	myRouter.StrictSlash(true)
 
+	r := repositories.NewGormPatientRepository(db)
+	deliveries.NewPatientsHandler(myRouter, r)
+
 	// @description users
-	myRouter.HandleFunc("/patients", patients).Methods("GET")
+	//myRouter.HandleFunc("/patients", patients).Methods("GET")
 	// myRouter.HandleFunc("/user/{name}", deleteUser).Methods("DELETE")
 	// myRouter.HandleFunc("/user/{name}/{email}", updateUser).Methods("PUT")
 	// myRouter.HandleFunc("/user/{name}/{email}", newUser).Methods("POST")
@@ -30,29 +37,26 @@ func HandleRequests() {
 	//http.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 	//myRouter.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
-	log.Fatal(http.ListenAndServe(":8081", myRouter))
-}
+	//cors optionsGoes Below
+	corsOpts := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, //you service is available and allowed for this base url
+		AllowedMethods: []string{
+			http.MethodGet, //http methods for your app
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+			http.MethodOptions,
+			http.MethodHead,
+		},
 
-// userProfile godoc
-// @Summary Patient Profile
-// @Description Patient Profile description
-// @Tags patients
-// @ID patients-profile
-// @Accept  json
-// @Produce  json
-// @Router /patients [get]
-// @Security ApiKeyAuth
-func patients(w http.ResponseWriter, r *http.Request) {
-	// db, err := gorm.Open("sqlite3", "test.db")
-	// if err != nil {
-	// 	panic("failed to connect database")
-	// }
-	// defer db.Close()
+		AllowedHeaders: []string{
+			"*", //or you can your header key values which you are using in your application
 
-	// var users []User
-	// db.Find(&users)
+		},
+	})
 
-	// json.NewEncoder(w).Encode(users)
-
-	fmt.Println("patients")
+	httpAddr := ":8081"
+	log.Printf("starting webserver at %s\n", httpAddr)
+	log.Fatal(http.ListenAndServe(httpAddr, corsOpts.Handler(myRouter)))
 }

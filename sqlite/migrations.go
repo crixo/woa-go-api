@@ -12,7 +12,7 @@ import (
 )
 
 // InitialMigration handles gorms migrations for development
-func InitialMigration() {
+func InitialMigration() *gorm.DB {
 	dbFile := "woa-go.db"
 
 	var err = os.Remove(dbFile)
@@ -67,6 +67,8 @@ func InitialMigration() {
 	}
 
 	db.Create(&patient)
+
+	return db
 }
 
 // GoMigrate handles struturected migrations

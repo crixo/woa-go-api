@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -23,7 +24,7 @@ func NewGormPatientRepository(DB *gorm.DB) patients.Repository {
 	return &gormPatientRepository{DB}
 }
 
-func (r *gormPatientRepository) Find(request *http.Request) ([]*model.Pazient, *paging.OffsetPaginator, error) {
+func (r *gormPatientRepository) Find(requestPaginator *model.RequestPaginator) ([]*model.Pazient, *paging.OffsetPaginator, error) {
 	// query := `SELECT id,title,content, author_id, updated_at, created_at
 	// 						FROM article WHERE created_at > ? ORDER BY created_at LIMIT ? `
 
@@ -54,11 +55,15 @@ func (r *gormPatientRepository) Find(request *http.Request) ([]*model.Pazient, *
 	}
 
 	// Step 2: create options. Here, we use the default ones (see below).
-	options := paging.NewOptions()
+	options := model.PaginatorOptions //paging.NewOptions()
 
 	// Step 3: create a paginator instance and pass your store, your current HTTP
 	// request and your options as arguments.
-	//request, _ := http.NewRequest("GET", "http://example.com?limit=20&offset=0", nil)
+	request, _ := http.NewRequest("GET",
+		fmt.Sprintf("http://example.com?%s=%d0&%s=%d",
+			options.LimitKeyName, requestPaginator.Limit,
+			options.OffsetKeyName, requestPaginator.Offset),
+		nil)
 	paginator, err := paging.NewOffsetPaginator(store, request, options)
 	if err != nil {
 		log.Fatal(err)
