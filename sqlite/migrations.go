@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"log"
-	"os"
 
 	//"github.com/crixo/woa-go-api/model"
 	"github.com/crixo/woa-go-api/model"
@@ -12,21 +11,10 @@ import (
 )
 
 // InitialMigration handles gorms migrations for development
-func InitialMigration() *gorm.DB {
-	dbFile := "woa-go.db"
-
-	var err = os.Remove(dbFile)
-
-	db, err := gorm.Open("sqlite3", dbFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.LogMode(true)
-
-	err = db.AutoMigrate(
+func InitialMigration(db *gorm.DB) {
+	err := db.AutoMigrate(
 		&model.User{},
-		&model.Pazient{},
+		&model.Patient{},
 		&model.RemoteHistory{},
 		&model.HistoryKind{},
 		&model.ExaminationKind{},
@@ -56,8 +44,8 @@ func InitialMigration() *gorm.DB {
 		historyKinds[i].ID = (&element).ID
 	}
 	log.Printf("%+v\n", historyKinds)
-	patient := model.Pazient{
-		PazientProfile: model.PazientProfile{
+	patient := model.Patient{
+		PatientProfile: model.PatientProfile{
 			FirstName: "Cristiano",
 			LastName:  "Degiorgis"},
 		RemoteHistories: []model.RemoteHistory{
@@ -67,8 +55,6 @@ func InitialMigration() *gorm.DB {
 	}
 
 	db.Create(&patient)
-
-	return db
 }
 
 // GoMigrate handles struturected migrations
@@ -87,7 +73,7 @@ func GoMigrate() {
 	m.InitSchema(func(tx *gorm.DB) error {
 		err := tx.AutoMigrate(
 			&model.User{},
-			&model.Pazient{},
+			&model.Patient{},
 			&model.RemoteHistory{},
 			&model.HistoryKind{},
 			&model.ExaminationKind{},

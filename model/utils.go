@@ -24,3 +24,9 @@ func CreateRequestPaginatorFromRequest(r *http.Request) *RequestPaginator {
 		Filter: r.URL.Query().Get("filter"),
 	}
 }
+
+// PageFetchResult is a generic paged result
+type PageFetchResult struct {
+	Total   int64
+	Results []interface{}
+}

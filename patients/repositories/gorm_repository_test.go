@@ -13,8 +13,8 @@ import (
 func TestFind(t *testing.T) {
 	db := test.SetUp(t)
 
-	patient := model.Pazient{
-		PazientProfile: model.PazientProfile{
+	patient := model.Patient{
+		PatientProfile: model.PatientProfile{
 			FirstName: "Cristiano",
 			LastName:  "Degiorgis"},
 		// RemoteHistories: []model.RemoteHistory{

@@ -1,12 +1,5 @@
 definitions:
-  model.HistoryKind:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-    type: object
-  model.Pazient:
+  model.PatientProfile:
     properties:
       address:
         type: string
@@ -28,26 +21,8 @@ definitions:
         type: string
       province:
         type: string
-      remoteHistories:
-        items:
-          $ref: '#/definitions/model.RemoteHistory'
-        type: array
       zipCode:
         type: string
-    type: object
-  model.RemoteHistory:
-    properties:
-      date:
-        type: string
-      description:
-        type: string
-      historyKind:
-        $ref: '#/definitions/model.HistoryKind'
-        type: object
-      historyKindID:
-        type: integer
-      pazientID:
-        type: integer
     type: object
 host: localhost:8081
 info:
@@ -65,20 +40,47 @@ paths:
     get:
       consumes:
       - application/json
+      description: Return a paged set of patient profiles w/ the total number of available
+        patients
+      operationId: patients-profile-find
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of records w/o pagination
+              type: int
+          schema:
+            items:
+              $ref: '#/definitions/model.PatientProfile'
+            type: array
+      summary: Get paged patient profiles
+      tags:
+      - patients
+    post:
+      consumes:
+      - application/json
       description: Patient Profile description
-      operationId: patients-profile
+      operationId: patients-profile-create
+      parameters:
+      - description: Create new paatient profile
+        in: body
+        name: patientProfile
+        required: true
+        schema:
+          $ref: '#/definitions/model.PatientProfile'
+          type: object
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Pazient'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      summary: Patient Profile
+            $ref: '#/definitions/model.PatientProfile'
+            type: object
+      summary: Create Patient Profile
       tags:
       - patients
 swagger: "2.0"

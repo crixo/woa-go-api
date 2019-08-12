@@ -24,7 +24,7 @@ func NewGormPatientRepository(DB *gorm.DB) patients.Repository {
 	return &gormPatientRepository{DB}
 }
 
-func (r *gormPatientRepository) Find(requestPaginator *model.RequestPaginator) ([]*model.Pazient, *paging.OffsetPaginator, error) {
+func (r *gormPatientRepository) Find(requestPaginator *model.RequestPaginator) ([]*model.Patient, *paging.OffsetPaginator, error) {
 	// query := `SELECT id,title,content, author_id, updated_at, created_at
 	// 						FROM article WHERE created_at > ? ORDER BY created_at LIMIT ? `
 
@@ -45,7 +45,7 @@ func (r *gormPatientRepository) Find(requestPaginator *model.RequestPaginator) (
 
 	// return res, nextCursor, err
 
-	res := []*model.Pazient{}
+	res := []*model.Patient{}
 
 	// Step 1: create the store. It takes your database connection pointer, a
 	// pointer to models and the GORM "ORDER BY" string.
@@ -76,5 +76,9 @@ func (r *gormPatientRepository) Find(requestPaginator *model.RequestPaginator) (
 	}
 
 	return res, paginator, err
+}
 
+func (r *gormPatientRepository) Create(p *model.Patient) error {
+	r.DB.Create(&p)
+	return nil
 }

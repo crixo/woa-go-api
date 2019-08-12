@@ -23,6 +23,7 @@ func TestBootstrapComplexEntity(t *testing.T) {
 		db.Create(&element)
 		t.Logf("%+v\n", &element)
 		t.Logf("DB sequence for element %d is %d", i, element.ID)
+		// TODO: check how to have element as reference type avoiding next line
 		historyKinds[i].ID = (&element).ID
 	}
 
@@ -34,8 +35,8 @@ func TestBootstrapComplexEntity(t *testing.T) {
 		}
 	}
 
-	patient := model.Pazient{
-		PazientProfile: model.PazientProfile{
+	patient := model.Patient{
+		PatientProfile: model.PatientProfile{
 			FirstName: "Cristiano",
 			LastName:  "Degiorgis"},
 		RemoteHistories: []model.RemoteHistory{
@@ -46,7 +47,7 @@ func TestBootstrapComplexEntity(t *testing.T) {
 
 	db.Create(&patient)
 
-	var patientFromDb model.Pazient
+	var patientFromDb model.Patient
 	db.Preload("RemoteHistories").
 		Preload("RemoteHistories.HistoryKind").
 		First(&patientFromDb)
@@ -81,7 +82,7 @@ func setup(t *testing.T) (db *gorm.DB) {
 
 	err = db.AutoMigrate(
 		&model.User{},
-		&model.Pazient{},
+		&model.Patient{},
 		&model.RemoteHistory{},
 		&model.HistoryKind{},
 		&model.ExaminationKind{},

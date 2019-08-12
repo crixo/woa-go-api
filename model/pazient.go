@@ -6,8 +6,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// PazientProfile contains anagrafic data
-type PazientProfile struct {
+// PatientProfile contains anagrafic data
+type PatientProfile struct {
 	gorm.Model
 	FirstName   string
 	LastName    string
@@ -22,16 +22,16 @@ type PazientProfile struct {
 	DateOfBirth *time.Time
 }
 
-// Pazient contains the full patient data including medical history
-type Pazient struct {
-	PazientProfile
+// Patient contains the full patient data including medical history
+type Patient struct {
+	PatientProfile
 	RemoteHistories []RemoteHistory
 }
 
-// RemoteHistory holds the overall history of pazient
+// RemoteHistory holds the overall history of Patient
 type RemoteHistory struct {
 	gorm.Model
-	PazientID     uint
+	PatientID     uint
 	HistoryKindID uint
 	HistoryKind   HistoryKind `gorm:"association_save_reference:true;save_associations:false"`
 	Date          *time.Time
@@ -41,7 +41,7 @@ type RemoteHistory struct {
 // Consultation contains the general information for the medical consultation
 type Consultation struct {
 	gorm.Model
-	PazientID      uint
+	PatientID      uint
 	Date           *time.Time
 	InitialProblem string
 }

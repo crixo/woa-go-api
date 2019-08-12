@@ -1,13 +1,12 @@
 package main
 
 import (
-	//"encoding/json"
-	"fmt"
-	//"net/http"
+	"log"
+	"os"
+
 	"github.com/crixo/woa-go-api/api"
-	//"github.com/crixo/woa-go-api/model"
-	//
 	"github.com/crixo/woa-go-api/sqlite"
+	"github.com/jinzhu/gorm"
 )
 
 // @title Swagger Example API
@@ -22,9 +21,18 @@ import (
 // @host localhost:8081
 // @BasePath
 func main() {
-	fmt.Println("Go ORM Tutorial")
+	log.Println("Go ORM Tutorial")
 
-	db := sqlite.InitialMigration()
+	dbFile := "woa-go.db"
+	var err = os.Remove(dbFile)
+	db, err := gorm.Open("sqlite3", dbFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	db.LogMode(true)
+
+	sqlite.InitialMigration(db)
 	// Handle Subsequent requests
 	api.HandleRequests(db)
 }

@@ -16,11 +16,37 @@
     "paths": {
         "/patients": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
+                "description": "Return a paged set of patient profiles w/ the total number of available patients",
+                "consumes": [
+                    "application/json"
                 ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Get paged patient profiles",
+                "operationId": "patients-profile-find",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.PatientProfile"
+                            }
+                        },
+                        "headers": {
+                            "X-Total-Count": {
+                                "type": "int",
+                                "description": "Total number of records w/o pagination"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
                 "description": "Patient Profile description",
                 "consumes": [
                     "application/json"
@@ -31,16 +57,26 @@
                 "tags": [
                     "patients"
                 ],
-                "summary": "Patient Profile",
-                "operationId": "patients-profile",
+                "summary": "Create Patient Profile",
+                "operationId": "patients-profile-create",
+                "parameters": [
+                    {
+                        "description": "Create new paatient profile",
+                        "name": "patientProfile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.PatientProfile"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Pazient"
-                            }
+                            "type": "object",
+                            "$ref": "#/definitions/model.PatientProfile"
                         }
                     }
                 }
@@ -48,18 +84,7 @@
         }
     },
     "definitions": {
-        "model.HistoryKind": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.Pazient": {
+        "model.PatientProfile": {
             "type": "object",
             "properties": {
                 "address": {
@@ -92,35 +117,8 @@
                 "province": {
                     "type": "string"
                 },
-                "remoteHistories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.RemoteHistory"
-                    }
-                },
                 "zipCode": {
                     "type": "string"
-                }
-            }
-        },
-        "model.RemoteHistory": {
-            "type": "object",
-            "properties": {
-                "date": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "historyKind": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.HistoryKind"
-                },
-                "historyKindID": {
-                    "type": "integer"
-                },
-                "pazientID": {
-                    "type": "integer"
                 }
             }
         }

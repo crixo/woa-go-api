@@ -21,7 +21,7 @@ func SetUp(t *testing.T) (db *gorm.DB) {
 
 	err = db.AutoMigrate(
 		&model.User{},
-		&model.Pazient{},
+		&model.Patient{},
 		&model.RemoteHistory{},
 		&model.HistoryKind{},
 		&model.ExaminationKind{},
