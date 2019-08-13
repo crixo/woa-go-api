@@ -6,9 +6,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//WpModel replicates gorm.Model otherwise swag will ignore it due to exernal package
+type WpModel struct {
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
+}
+
 // PatientProfile contains anagrafic data
 type PatientProfile struct {
-	gorm.Model
+	WpModel
 	FirstName   string
 	LastName    string
 	Profession  string

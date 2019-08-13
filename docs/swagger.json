@@ -47,7 +47,7 @@
                 }
             },
             "post": {
-                "description": "Patient Profile description",
+                "description": "Create Patient Profile",
                 "consumes": [
                     "application/json"
                 ],
@@ -61,7 +61,7 @@
                 "operationId": "patients-profile-create",
                 "parameters": [
                     {
-                        "description": "Create new paatient profile",
+                        "description": "Create new patient profile",
                         "name": "patientProfile",
                         "in": "body",
                         "required": true,
@@ -81,9 +81,74 @@
                     }
                 }
             }
+        },
+        "/patients/{id}": {
+            "put": {
+                "description": "Update Patient Profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "patients"
+                ],
+                "summary": "Update Patient Profile",
+                "operationId": "patients-profile-update",
+                "parameters": [
+                    {
+                        "description": "Update an existing patient profile",
+                        "name": "patientProfile",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.PatientProfile"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Patient profile identifier that has to match w/ the identifier within the body contract",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.PatientProfile"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "traceID": {
+                    "type": "string"
+                }
+            }
+        },
         "model.PatientProfile": {
             "type": "object",
             "properties": {
@@ -93,7 +158,13 @@
                 "city": {
                     "type": "string"
                 },
+                "createdAt": {
+                    "type": "string"
+                },
                 "dateOfBirth": {
+                    "type": "string"
+                },
+                "deletedAt": {
                     "type": "string"
                 },
                 "email": {
@@ -101,6 +172,9 @@
                 },
                 "firstName": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "lastName": {
                     "type": "string"
@@ -115,6 +189,9 @@
                     "type": "string"
                 },
                 "province": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 },
                 "zipCode": {

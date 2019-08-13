@@ -10,6 +10,7 @@ import (
 	//"log"
 	"github.com/crixo/woa-go-api/model"
 	"github.com/crixo/woa-go-api/patients"
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -29,7 +30,8 @@ func NewPatientsHandler(router *mux.Router, patientsRepository patients.Reposito
 		PatientsRepository: patientsRepository,
 	}
 	router.HandleFunc("/patients", handler.findPatients).Methods("GET")
-	router.HandleFunc("/patients", handler.createPatients).Methods("POST")
+	router.HandleFunc("/patients", handler.createPatient).Methods("POST")
+	router.HandleFunc("/patients/{id}", handler.updatePatient).Methods("PUT")
 	// e.GET("/articles", handler.FetchArticle)
 	// e.POST("/articles", handler.Store)
 	// e.GET("/articles/:id", handler.GetByID)
@@ -74,15 +76,15 @@ func (ph *PatientsHandler) findPatients(w http.ResponseWriter, r *http.Request) 
 }
 
 // @Summary Create Patient Profile
-// @Description Patient Profile description
+// @Description Create Patient Profile
 // @Tags patients
 // @ID patients-profile-create
 // @Accept  json
-// @Param patientProfile body model.PatientProfile true "Create new paatient profile"
+// @Param patientProfile body model.PatientProfile true "Create new patient profile"
 // @Produce  json
 // @Success 200 {object} model.PatientProfile
 // @Router /patients [post]
-func (ph *PatientsHandler) createPatients(w http.ResponseWriter, r *http.Request) {
+func (ph *PatientsHandler) createPatient(w http.ResponseWriter, r *http.Request) {
 	var dto model.PatientProfile
 	decodeHTTPBody(r, &dto)
 
@@ -99,10 +101,66 @@ func (ph *PatientsHandler) createPatients(w http.ResponseWriter, r *http.Request
 	log.Println("createPatients")
 }
 
+// @Summary Update Patient Profile
+// @Description Update Patient Profile
+// @Tags patients
+// @ID patients-profile-update
+// @Accept  json
+// @Param patientProfile body model.PatientProfile true "Update an existing patient profile"
+// @Param id path int true "Patient profile identifier that has to match w/ the identifier within the body contract"
+// @Produce  json
+// @Success 200 {object} model.PatientProfile
+// @Failure 400 {object} model.ErrorResponse
+// @Router /patients/{id} [put]
+func (ph *PatientsHandler) updatePatient(w http.ResponseWriter, r *http.Request) {
+	// urlSegments := strings.Split(r.URL.Path, "/")
+	// idFromPath, _ := strconv.ParseUint(urlSegments[len(urlSegments)-1], 10, 64)
+	vars := mux.Vars(r)
+	idFromPath, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		errorResponse := model.ErrorResponse{
+			Code:    model.INALID_INPUT,
+			Message: "Missing resource identifier in path",
+			TraceID: uuid.New(),
+		}
+		writeError(w, &errorResponse)
+		return
+	}
+	var dto model.PatientProfile
+	decodeHTTPBody(r, &dto)
+	if uint(idFromPath) != dto.ID {
+		errorResponse := model.ErrorResponse{
+			Code:    model.RESOURCE_IDENTIFIER_MISMATCH,
+			Message: "Resource identifier in path should match with the body contract.ID",
+			TraceID: uuid.New(),
+		}
+		writeError(w, &errorResponse)
+		return
+	}
+
+	// p := model.Patient{}
+	// p.PatientProfile = dto
+
+	// err = ph.PatientsRepository.Create(&p)
+	// if err != nil {
+	// 	panic("failed to connect database")
+	// }
+
+	// json.NewEncoder(w).Encode(&p.PatientProfile)
+
+	log.Println("updatePatient")
+}
+
 func decodeHTTPBody(r *http.Request, structure interface{}) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(structure)
 	if err != nil {
-		log.Println("Error parsing post data")
+		log.Print(err)
 	}
+}
+
+func writeError(w http.ResponseWriter, errorResponse *model.ErrorResponse) {
+	log.Println(errorResponse)
+	w.WriteHeader(http.StatusBadRequest)
+	json.NewEncoder(w).Encode(errorResponse)
 }

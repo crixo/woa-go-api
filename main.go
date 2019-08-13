@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/crixo/woa-go-api/api"
 	"github.com/crixo/woa-go-api/sqlite"
@@ -23,6 +24,10 @@ import (
 func main() {
 	log.Println("Go ORM Tutorial")
 
+	// gorm.NowFunc = func() time.Time {
+	// 	return time.Now().UTC()
+	// }
+
 	dbFile := "woa-go.db"
 	var err = os.Remove(dbFile)
 	db, err := gorm.Open("sqlite3", dbFile)
@@ -30,9 +35,14 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+	db.SetNowFuncOverride(myNowFunc)
 	db.LogMode(true)
 
 	sqlite.InitialMigration(db)
 	// Handle Subsequent requests
 	api.HandleRequests(db)
+}
+
+var myNowFunc = func() time.Time {
+	return time.Now().UTC()
 }

@@ -4,10 +4,12 @@ go 1.12
 
 require (
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
+	github.com/beevik/guid v0.0.0-20170504223318-d0ea8faecee0
 	github.com/bxcodec/go-clean-arch v2.0.1+incompatible
 	github.com/go-chi/chi v4.0.2+incompatible // indirect
 	github.com/go-playground/locales v0.12.1 // indirect
 	github.com/go-playground/universal-translator v0.16.0 // indirect
+	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
 	github.com/guregu/null v3.4.0+incompatible // indirect
 	github.com/jinzhu/gorm v1.9.10

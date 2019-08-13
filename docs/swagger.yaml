@@ -1,16 +1,31 @@
 definitions:
+  model.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      traceID:
+        type: string
+    type: object
   model.PatientProfile:
     properties:
       address:
         type: string
       city:
         type: string
+      createdAt:
+        type: string
       dateOfBirth:
+        type: string
+      deletedAt:
         type: string
       email:
         type: string
       firstName:
         type: string
+      id:
+        type: integer
       lastName:
         type: string
       mobile:
@@ -20,6 +35,8 @@ definitions:
       profession:
         type: string
       province:
+        type: string
+      updatedAt:
         type: string
       zipCode:
         type: string
@@ -62,10 +79,10 @@ paths:
     post:
       consumes:
       - application/json
-      description: Patient Profile description
+      description: Create Patient Profile
       operationId: patients-profile-create
       parameters:
-      - description: Create new paatient profile
+      - description: Create new patient profile
         in: body
         name: patientProfile
         required: true
@@ -81,6 +98,42 @@ paths:
             $ref: '#/definitions/model.PatientProfile'
             type: object
       summary: Create Patient Profile
+      tags:
+      - patients
+  /patients/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update Patient Profile
+      operationId: patients-profile-update
+      parameters:
+      - description: Update an existing patient profile
+        in: body
+        name: patientProfile
+        required: true
+        schema:
+          $ref: '#/definitions/model.PatientProfile'
+          type: object
+      - description: Patient profile identifier that has to match w/ the identifier
+          within the body contract
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PatientProfile'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+            type: object
+      summary: Update Patient Profile
       tags:
       - patients
 swagger: "2.0"
